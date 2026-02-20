@@ -1,81 +1,187 @@
-# README
 
-<------------     CKEditor     ------------>
+# CKEditor 4.13.1 Integration in Rails
 
-1. gem 'jquery-rails' should be added in Gemfile.
+This repository demonstrates how to integrate **CKEditor 4.13.1** into a Ruby on Rails application with toolbar customization and emoji support.
 
-2. Add gem 'ckeditor', '~> 4.2' to Gemfile and run command "bundle".
+---
 
-3. Make a file at config/initializers/ckeditor.rb and add this code:-
+## Installation Steps
 
-	Ckeditor.setup do |config|
-  		# //cdn.ckeditor.com/<version.number>/<distribution>/ckeditor.js
-  	config.cdn_url = "//cdn.ckeditor.com/4.6.1/basic/ckeditor.js"
-	end
+### 1. Add Required Gems
 
-4. Add this code in view/layouts/application.html.erb:-
+Add the following gems to your `Gemfile`:
 
-	<%= javascript_include_tag Ckeditor.cdn_url %>
+```ruby
+gem 'jquery-rails'
+gem 'ckeditor', '~> 4.2'
+```
 
-5. Add this code in config/initializers/assets.rb:-
+Then run:
 
-	Rails.application.config.assets.precompile += %w[ckeditor/config.js]
+```bash
+bundle install
+```
 
-6. Make a view form and add this line:-
+---
 
-	<%= form.cktext_area :content, value: 'Default value', id: 'sometext' %>
+### 2. Configure CKEditor CDN
 
-7. Make a file at app/assets/javascripts/ckeditor/config.js 
-   and add this code:-
+Create a file:
 
-	CKEDITOR.editorConfig = function (config) {
-  		// ... other configuration ...
+```
+config/initializers/ckeditor.rb
+```
 
-  		config.toolbar_mini = [
-    			["Bold",  "Italic",  "Underline",  "Strike",  "-",  "Subscript",  "Superscript"],
-  		];
-  		config.toolbar = "mini";
+Add:
 
-  		// ... rest of the original config.js  ...
-	}
+```ruby
+Ckeditor.setup do |config|
+  # //cdn.ckeditor.com/<version.number>/ckeditor.js
+  config.cdn_url = "//cdn.ckeditor.com/4.6.1/basic/ckeditor.js"
+end
+```
 
-   This code or file is usde to customize CKEditor's toolbar.
+---
 
-8. Now to add Emoji, add this line in app/assets/javascripts/application.js
+### 3. Include CKEditor in Layout
 
-	//= require ckeditor/init
+In:
 
-	before 
+```
+app/views/layouts/application.html.erb
+```
 
-	//= require_tree .
+Add:
 
-9. In view form add this line "ckeditor: {toolbar: 'Full'}" as:-
+```erb
+<%= javascript_include_tag Ckeditor.cdn_url %>
+```
 
-	<%= form.cktext_area :content, value: 'Default value', id: 'sometext', ckeditor: {toolbar: 'Full'} %>
+---
 
-10. Goto this link:-
+### 4. Precompile CKEditor Assets
 
-	https://ckeditor.com/ckeditor-4/download/
+In:
 
-    customize CKEditor by "Online Builder" as per your use and Download then extract.
+```
+config/initializers/assets.rb
+```
 
-11. You can see your customized CKEditor after openning "index.html" file from
-    /Downloads/ckeditor_4.13.1_a13bc2f77cff/ckeditor/samples/
+Add:
 
-12. Copy the folder that you need like "lang", "skins" from:-
+```ruby
+Rails.application.config.assets.precompile += %w[ckeditor/config.js]
+```
 
-	/ckeditor_4.13.1_a13bc2f77cff/ckeditor
+---
 
-    and paste in the your projects folder
+### 5. Use CKEditor in Forms
 
-	Project/app/assets/javascripts/ckeditor/
+```erb
+<%= form.cktext_area :content, value: 'Default value', id: 'sometext' %>
+```
 
-13. Add the folders that you need in your project from:-
+---
 
-	ckeditor_4.13.1_a13bc2f77cff/ckeditor/plugins
+## Toolbar Customization
 
-    to
+Create:
 
-	Project/app/assets/javascripts/ckeditor/
+```
+app/assets/javascripts/ckeditor/config.js
+```
 
-14. Now run your server to see the magic.
+Add:
+
+```javascript
+CKEDITOR.editorConfig = function (config) {
+
+  config.toolbar_mini = [
+    ["Bold", "Italic", "Underline", "Strike", "-", "Subscript", "Superscript"]
+  ];
+
+  config.toolbar = "mini";
+};
+```
+
+This file allows you to customize the CKEditor toolbar.
+
+---
+
+## Enable Emoji Support
+
+In:
+
+```
+app/assets/javascripts/application.js
+```
+
+Add the following line **before**:
+
+```javascript
+//= require_tree .
+```
+
+Add:
+
+```javascript
+//= require ckeditor/init
+```
+
+Update your form as:
+
+```erb
+<%= form.cktext_area :content,
+      value: 'Default value',
+      id: 'sometext',
+      ckeditor: { toolbar: 'Full' } %>
+```
+
+---
+
+## Custom CKEditor Build (Optional)
+
+1. Visit: https://ckeditor.com/ckeditor-4/download/
+2. Use the **Online Builder** to customize CKEditor.
+3. Download and extract the package.
+4. Open:
+
+```
+/ckeditor/samples/index.html
+```
+
+Copy required folders like:
+
+```
+lang
+skins
+plugins
+```
+
+From:
+
+```
+ckeditor_4.13.1/ckeditor/
+```
+
+To:
+
+```
+app/assets/javascripts/ckeditor/
+```
+
+---
+
+## Run the Server
+
+```bash
+rails server
+```
+
+Open your form page to see CKEditor in action.
+
+---
+
+## Author
+
+Pawan Bharti
